@@ -1,0 +1,282 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{% block title %}Auctions{% endblock %}</title>
+
+    <!-- meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- CSS -->
+    <link href="{% static 'auctions/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <!-- Navbar -->
+        <div class="bg-light">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-light ">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="{% url 'index' %}">&nbsp;Auctions</a>
+                        <img id="myLogo" src="{% static 'auctions/images/misc/logo.png' %}" alt="logo" height="35">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left: 30px;">
+                                <li class="nav-item">
+                                    <a class="nav-link active " href="{% url 'index' %}">Active Listings
+                                        <span class="navSep">&nbsp;&nbsp;|</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#">Help</a>
+                                </li>
+                            </ul>
+                            <!-- Search bar -->
+                            <form class="d-flex mx-auto w-50" method="GET" action="{% url 'search_listings' %}">
+                                <div class="input-group">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false" style="border-right: none;">
+                                        All Categories
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" data-value="Digital">Digital</a></li>
+                                        <li><a class="dropdown-item" href="#" data-value="Fashion">Fashion</a></li>
+                                        <li><a class="dropdown-item" href="#" data-value="Home and Garden">Home and
+                                                Garden</a></li>
+                                        <li><a class="dropdown-item" href="#" data-value="Toys">Toys</a></li>
+                                        <li><a class="dropdown-item" href="#" data-value="Sports">Sports</a></li>
+                                        <li><a class="dropdown-item" href="#" data-value="Lifestyle">Lifestyle</a></li>
+                                        <li><a class="dropdown-item" href="#" data-value="Other">Other</a></li>
+                                    </ul>
+                                    <input class="form-control" type="search" name="q" placeholder="Search for listings"
+                                        aria-label="Search" required>
+                                    <input type="hidden" name="category" id="selectedCategory">
+                                    <button class="btn btn-secondary" type="submit"><i
+                                            class="bi bi-search"></i></button>
+                                </div>
+                            </form>
+
+                            <!-- Right elements -->
+                            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                                <div class="d-flex align-items-center" style="margin-left: 30px;">
+                                    <a class="text-reset me-3" href="{% url 'view_wishlist' %}">
+                                        <i class="bi bi-heart"></i>
+                                    </a>
+                                    <div class="navSep">| &nbsp;</div>
+
+                                    <div class="btn-group dropdown">
+                                        <a role="button"
+                                            class="nav-link dropdown-toggle {% if user.is_authenticated %}bg-primary text-white{% endif %}"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-person-circle"></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            {% if user.is_authenticated %}
+                                            <li><a class="dropdown-item" href="{% url 'edit_profile' %}">My
+                                                    Profile</a>
+                                            </li>
+                                            <li><a class="dropdown-item" href="#">Order History</a></li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                                            {% else %}
+                                            <li>
+                                                <a class="dropdown-item" href="{% url 'login' %}"><i
+                                                        class="bi bi-door-open"></i>&nbsp;Log In</a>
+                                            </li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="{% url 'register' %}"><i
+                                                        class="bi bi-pen"></i>&nbsp;Register</a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                    <div class="navSep">| &nbsp;</div>
+                                    <a class="hoverButtons" href="{% url 'post_ad' %}">+ Post Free Ad</a>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div> <!-- End Navbar -->
+    </header>
+
+    <div class="bg-light secondaryNav">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light ">
+                <div class="container-fluid">
+                    <!-- Add hamburger button for mobile -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarCategories" aria-controls="navbarCategories" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <!-- Make the nav items collapsible -->
+                    <div class="collapse navbar-collapse" id="navbarCategories">
+                        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                            <li class="nav-item px-3"><a class="nav-link"
+                                    href="{% url 'filtered_listings' 'digital' %}"><i
+                                        class="bi bi-tv"></i>&nbsp;Digital</a></li>
+                            <li class="nav-item px-3"><a class="nav-link"
+                                    href="{% url 'filtered_listings' 'home_and_garden' %}"><i
+                                        class="bi bi-house"></i>&nbsp;Home and Garden</a></li>
+                            <li class="nav-item px-3"><a class="nav-link" href="{% url 'filtered_listings' 'toys' %}"><i
+                                        class="bi bi-play-btn"></i>&nbsp;Toys</a></li>
+                            <li class="nav-item px-3"><a class="nav-link"
+                                    href="{% url 'filtered_listings' 'fashion' %}">Fashion</a></li>
+                            <li class="nav-item px-3"><a class="nav-link"
+                                    href="{% url 'filtered_listings' 'lifestyle' %}">Lifestyle</a></li>
+                            <li class="nav-item px-3"><a class="nav-link"
+                                    href="{% url 'filtered_listings' 'automotive' %}"><i
+                                        class="bi bi-car-front"></i>&nbsp;Automotive</a></li>
+                            <li class="nav-item dropdown px-3">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-list"></i>&nbsp;Other Categories
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="{% url 'filtered_listings' 'other1' %}">Other
+                                            1</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'filtered_listings' 'other2' %}">Other
+                                            2</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'filtered_listings' 'other3' %}">Other
+                                            3</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Messages -->
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Block -->
+        {% block body %}
+        {% endblock %}
+    </div>
+    <br>
+
+    <!-- Footer -->
+    <div class="bg-light mt-auto py-3">
+        <div class="container">
+            <footer class=" text-center text-lg-start text-muted">
+                <!-- Section: Social media -->
+                <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+                    <!-- Left -->
+                    <div class="me-5 d-none d-lg-block">
+                        <span>Shop on the go:</span>
+                    </div>
+                    <!-- Right -->
+                    <div>
+                        <a class="d-inline-block mr-2" href="" target="_blank">
+                            <img alt="Download on the App Store"
+                                src="{% static 'auctions/images/misc/available_on_the_app_store.png' %}"
+                                style="width: 8rem;border-radius: .5rem;">
+                        </a>
+                        <a class="d-inline-block mr-2" href="" target="_blank">
+                            <img alt="Get it on Google Play"
+                                src="{% static 'auctions/images/misc/get_it_on_google_play.png' %}"
+                                style="width: 8rem;border-radius: .5rem;">
+                        </a>
+                        <a class="d-inline-block mr-2" href="" target="_blank">
+                            <img alt="Explore on AppGallery"
+                                src="{% static 'auctions/images/misc/explore_it_on_huawei_app_gallery.png' %}"
+                                style="width: 8rem;border-radius: .5rem;">
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Section: Links  -->
+                <section class="">
+                    <div class="container text-center text-md-start mt-5">
+                        <!-- Grid row -->
+                        <div class="row mt-3">
+                            <!-- Wicked column -->
+                            <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                                <!-- Content -->
+                                <h6 class="fw-bold mb-4">
+                                    <p>Auctions</p>
+                                </h6>
+                                <p>
+                                    <img id="myLogo" src="{% static 'auctions/images/misc/logo.png' %}" alt="shop logo"
+                                        style="width: 4rem;">
+                                </p>
+                            </div>
+
+                            <!-- Contacts column -->
+                            <div class="col-md-2 col-lg-2 col-xl-4 mx-auto mb-4">
+                                <!-- Links -->
+                                <h6 class="text-uppercase fw-bold mb-4">Legal stuff</h6>
+                                <p><i class="bi-house me-3"></i>Terms & Conditions</p>
+                                <p><i class="bi-envelope me-3"></i>Privacy Policy</p>
+                                <p><i class="bi-printer me-3"></i>Shipping Policy</p>
+                                <p><i class="bi-printer me-3"></i>Dispute Policy</p>
+                            </div>
+
+                            <!-- Grid column -->
+                            <div class="col-md-3 col-lg-2 col-xl-4 mx-auto mb-4">
+                                <!-- Links -->
+                                <h6 class="text-uppercase fw-bold mb-4">Help</h6>
+                                <p><i class="bi bi-cloud-arrow-down-fill"></i>&nbsp;How to buy</p>
+                                <p><i class="bi bi-cloud-arrow-up"></i>&nbsp;How to sell</p>
+                                <p><i class="bi bi-exclamation-circle-fill"></i>&nbsp;Safety online</p>
+                            </div>
+                        </div>
+                        <!-- Grid row -->
+                    </div>
+                </section>
+
+                <!-- Copyright -->
+                <div class="text-center p-4">
+                    <small>© 2024 Copyright - Sim for CS50 </small>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Script to handle category selection
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+        const selectedCategoryInput = document.getElementById('selectedCategory');
+
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const selectedValue = item.getAttribute('data-value');
+                selectedCategoryInput.value = selectedValue; // Set hidden input value
+                document.querySelector('.btn-outline-secondary').innerText = selectedValue; // Update button text
+            });
+        });
+    </script>
+    <!-- Necessary JavaScript for bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

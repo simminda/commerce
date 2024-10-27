@@ -1,0 +1,32 @@
+{% extends "auctions/layout.html" %}
+{% load humanize %}
+
+
+{% block body %}
+
+<h2>Listings</h2>
+
+<div class="container">
+    <div class="row">
+        {% for listing in listings %}
+        <div class="col-md-2">
+            <div class="card mb-4">
+                <img src="{{ listing.images.first.image.url }}" class="card-img-top" alt="{{ listing.name }}"
+                    style="height: 180px; object-fit: cover;">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ listing.name }}</h5>
+                    <span class="mt-auto">Current Price: R{% if listing.highest_bid >= listing.reservation_price %}
+                        {{ listing.highest_bid|intcomma }}{% else %}{{ listing.reservation_price|intcomma }}{% endif %}
+                    </span>
+                    <a href="{% url 'view_listing' listing.name %}" class="btn btn-primary mt-auto">View
+                        Listing</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No listings available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

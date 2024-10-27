@@ -1,0 +1,128 @@
+{% extends "auctions/layout.html" %}
+{% load humanize %}
+
+{% block body %}
+
+<div class="d-flex align-items-center">
+    <h1 class="me-2">{{ listing.name }}</h1>
+    {% if user.is_authenticated %}
+    {% if listing in user.wishlist.all %}
+    <a href="{% url 'remove_from_wishlist' listing.name %}" class="btn btn-danger">
+        <i class="bi bi-heart-fill"></i>
+    </a>
+    {% else %}
+    <a href="{% url 'add_to_wishlist' listing.name %}" class="btn btn-outline-secondary">
+        <i class="bi bi-heart"></i>
+    </a>
+    {% endif %}
+    {% endif %}
+</div>
+
+<!-- Listing info bar -->
+<div style="background-color: #f8f9fa; padding: 2px; margin-bottom: 5px;">
+    <small><strong>Listing Date:</strong> {{ listing.listing_date }}</small>
+    <span style="float: right;"><strong>by:</strong> {{ listing.user.username }}</span>
+</div>
+<div class="row" id="itemListing">
+    <div class="col-md-6"> <!-- Content on the left -->
+        <p>{{ listing.description|linebreaks }}</p>
+        <p><strong>Closing Date:</strong> {{ listing.closing_date }}</p>
+        <h3 class="card-text"><strong>Highest Bid: R{{ listing.highest_bid|intcomma }}</strong></h3>
+
+        {% if request.user != listing.user and listing.is_active and listing.closing_date >= today %}
+        <form method="post" action="{% url 'place_bid' listing.name %}">
+            {% csrf_token %}
+            <div class="col-md-6">
+                <input class="form-control" type="number" name="bid_amount" placeholder="Enter your bid" required
+                    value="{{ listing.highest_bid|default:listing.reservation_price }}" step="50">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Place Bid</button>
+        </form>
+        {% else %}
+        <p class="text-danger">Bidding has closed.</p>
+        {% endif %}
+
+        {% if not listing.is_active and highest_bidder == request.user %}
+        <div class="alert alert-success mt-3">
+            <h4 class="alert-heading">Congratulations! 🎉</h4>
+            <p>You've won this auction with the highest bid of R{{ listing.highest_bid|intcomma }}!</p>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-6" style="border-left: solid 1px gainsboro;"> <!-- Carousel on the right -->
+        <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for image in images %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ listing.name }}"
+                        style="height: 600px; object-fit: cover;">
+                </div>
+                {% endfor %}
+            </div>
+            {% if images|length > 1 %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Close Auction -->
+{% if request.user == listing.user and listing.is_active %}
+<form action="{% url 'close_auction' listing.name %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-warning mt-3">Close Auction</button>
+</form>
+{% elif not listing.is_active and listing.winner %}
+<p>This auction has ended. Winner: {{ listing.winner.username }}</p>
+{% endif %}
+
+<br>
+<!-- Delete Listing -->
+{% if request.user == listing.user %}
+<form method="post" action="{% url 'delete_listing' listing.name %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete Listing</button>
+</form>
+{% endif %}
+
+<!-- Comments Section -->
+<div class="mt-4 border rounded p-3 mb-3" style="margin-top: 25px;">
+    <h3>Comments:</h3>
+    <div>
+        {% for comment in comments %}
+        <p><strong>{{ comment.user.username }}:</strong> {{ comment.content }}
+            <small>
+                Created: {{ comment.created_at }}<br>
+            </small>
+        </p>
+        {% empty %}
+        <p>No comments yet.</p>
+        {% endfor %}
+    </div>
+
+    {% if user.is_authenticated %}
+    <form method="POST" class="form-group">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Add Comment</button>
+    </form>
+    {% else %}
+    <p>You must be logged in to comment.</p>
+    {% endif %}
+</div>
+
+
+
+
+
+{% endblock %}

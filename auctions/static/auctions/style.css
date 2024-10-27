@@ -1,0 +1,180 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure the body takes at least full viewport height */
+}
+.content {
+    flex: 1; /* Allow the content to grow */
+}
+
+
+.hoverButtons:hover {
+    border: solid 1px gainsboro;
+    border-radius: 20px;
+    background-color: rgb(63, 63, 63);
+    color: white;
+}
+
+.hoverButtons {
+    padding: 5px;
+    text-decoration: none;
+}
+
+.navSep {
+    color: rgb(153, 152, 152);
+}
+
+.userForms div {
+    padding-bottom: 10px;
+}
+
+.userForms div input{
+    width: 320px;
+}
+
+h2 {
+    margin-top: 2%;
+    padding-bottom: 2%;
+}
+
+.secondaryNav {
+    border-top: solid 1px rgb(153, 152, 152);
+    height: 50px;
+}
+
+.nav-item:hover {
+    color: #007bff; /* Bootstrap primary blue color */
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.nav-link {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Search bar */
+
+/* Make dropdown button grey with right border */
+.input-group .btn-outline-secondary {
+    background-color: #ebfa97;  /* light grey background */
+    border-right: 1px solid #dee2e6;  /* light grey right border */
+    border-top-left-radius: 5px;  /* increased border radius */
+    border-bottom-left-radius: 5px;
+}
+
+/* Remove padding between input and search button */
+.input-group {
+    flex-wrap: nowrap;
+}
+
+/* Enhance border radius for all elements */
+.input-group .form-control {
+    border-left: none;
+    border-radius: 0;  /* remove default radius since it's in the middle */
+}
+
+.input-group .btn-outline-success {
+    border-top-right-radius: 5px;  /* increased border radius */
+    border-bottom-right-radius: 5px;
+    color: white;
+}
+
+.input-group {
+    flex-wrap: nowrap;
+}
+
+.input-group > * {
+    margin-left: 0 !important;  /* remove any margins between input group elements */
+}
+
+/* Enhance border radius for all elements */
+.input-group .form-control {
+    border-left: none;
+    border-radius: 0;  /* remove default radius since it's in the middle */
+}
+
+.input-group .btn-outline-success {
+    border-top-right-radius: 10px;  /* increased border radius */
+    border-bottom-right-radius: 10px;
+}
+
+/* Keep consistent border color */
+.input-group .btn-outline-secondary,
+.input-group .form-control {
+    border-color: #dee2e6;
+}
+
+/* Remove focus outline */
+.input-group .form-control:focus {
+    border-color: #dee2e6;
+    box-shadow: none;
+}
+
+.input-group .btn-outline-secondary:focus {
+    box-shadow: none;
+}
+
+/* Keep consistent border color */
+.input-group .btn-outline-secondary,
+.input-group .form-control {
+    border-color: #dee2e6;
+}
+
+/* Remove focus outline */
+.input-group .form-control:focus {
+    border-color: #dee2e6;
+    box-shadow: none;
+}
+
+.input-group .btn-outline-secondary:focus {
+    box-shadow: none;
+}
+
+/* Adjust dropdown on mobile */
+@media (max-width: 991px) {
+    .navbar-nav {
+        width: 100%;
+        text-align: left;
+    }
+    
+    .nav-item {
+        padding: 0.5rem 1rem !important;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .nav-item:last-child {
+        border-bottom: none;
+    }
+}
+
+.card {
+    height: 95%; /* Ensures that cards take up the full height of their container */
+}
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+#itemListing {
+    border: solid 1px gainsboro;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#listingBar {
+    background-color: #dee2e6;
+    padding: 2px;
+    margin-bottom: 2px;
+    border: solid 1px black;
+}
+
+#wishButton{
+    background-color: bisque;
+}
+

@@ -1,0 +1,52 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div class="container">
+    <h1>Create a New Listing</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Listing Details -->
+        <div class="mb-3">
+            {% for field in listing_form %}
+            {% if field.name != 'category' %} {# Exclude the category field from the loop #}
+            <div class="form-group">
+                {{ field.label }}
+                {{ field }}
+                {% if field.errors %}
+                <div class="text-danger">
+                    {{ field.errors|join:", " }}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Category field -->
+        <div class="form-group">
+            <label for="id_category">Category:</label>
+            <select id="id_category" name="category" class="form-control">
+                <option value="">Select a category</option> <!-- Default option -->
+                {% for value, display in listing_form.category.field.choices %}
+                <option value="{{ value }}">{{ display }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Image Uploads -->
+        <h3>Upload Images</h3>
+        {{ formset.management_form }}
+        {% for form in formset %}
+        <div class="mb-3">
+            {{ form.as_p|safe }}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Post Ad</button>
+    </form>
+
+</div>
+
+{% endblock %}

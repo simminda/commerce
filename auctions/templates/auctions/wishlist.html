@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<h2>{{request.user}}'s Wishlist</h2>
+<div class="row">
+    {% for item in wishlist_items %}
+    <div class="col-md-4">
+        <h5>{{ item.listing.name }}</h5>
+        <!-- Check if there is an image -->
+        {% if item.listing.images.first %}
+        <img src="{{ item.listing.images.first.image.url }}" alt="{{ item.listing.name }}" class="img-fluid"
+            style="max-height: 200px;">
+        {% endif %}
+        <br>
+        <a href="{% url 'view_listing' item.listing.name %}">View Listing</a><br><br>
+        <a href="{% url 'remove_from_wishlist' item.listing.name %}" class="btn btn-danger"><i
+                class="bi bi-trash"></i></a>
+    </div>
+    {% empty %}
+    <p>Your wishlist is empty.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
